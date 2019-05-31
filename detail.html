@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/detail.css" />
+		<link rel="stylesheet" type="text/css" href="css/swiper.min.css" />
+	</head>
+
+	<body>
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<!--<div class="swiper-slide">
+					<img src="img/carouselBox61.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="img/carouselBox62.jpg" />
+				</div>
+				<div class="swiper-slide">
+					<img src="img/carouselBox63.jpg" />
+				</div>-->
+			</div>
+			<!-- 如果需要分页器 -->
+			<div class="swiper-pagination"></div>
+		</div>
+		<div class="shop_info">
+			<!--<p class="new_price">￥5001-9008</p>
+			<p class="old_price">￥5001-9008</p>
+			<p class="tip">该商品最高</p>
+			<p class="title">啥地方地方的份上代发地方爱的发的发生</p>
+			<p class="ant">
+				<span>快递</span>
+				<span>快递</span>
+				<span>快递</span>
+			</p>-->
+		</div>
+		<div class="active">
+			<div class="cui">
+				<span class="one">优惠</span><span class="one_one">促销</span><span class="t">每人限购来件；超出则该商品全部都安原来的价格</span><span class="cha">查看</span>
+			</div>
+			<div class="zui">
+				<span class="one">活动</span><span class="one_one">下单有礼</span><span class="t">此商品下单可集阳光兑水果</span><span class="cha">···</span>
+			</div>
+		</div>
+		<div class="bottom_nav">
+		    <ul class="bottom_nav_ul">
+		    	<li>
+		    		<i><img src="img/效果图13.png"/></i>
+		    		<p>客服</p>
+		    	</li>
+		    	<li>
+		    		<i><img src="img/效果图13.png"/></i>
+		    		<p>店铺</p>
+		    	</li>
+		    	<li>
+		    		<i><img src="img/效果图13.png"/></i>
+		    		<p>收藏</p>
+		    	</li>
+		    </ul>
+		    <div class="shop">加入购物车</div>
+		    <div class="shop newshop">立即购买</div>
+		</div>
+	</body>
+	<script src="js/jquery-1.8.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		function rem(doc, win) {
+			let docEl = doc.documentElement; //html 考虑以及兼容了 屏幕旋转的事件
+			//判断事件orientationchange 横屏 事件  或resize 
+			let resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+
+			let recalc = function() {
+				var clientWidth = docEl.clientWidth; //获取屏幕大小
+				if(!clientWidth) {
+					return
+				}; //未获取屏幕尺寸        
+				//屏幕大于750
+				if(clientWidth >= 750) {
+					docEl.style.fontSize = '100px';
+				} else {
+					//			            	html的font-size         100* 设备宽度 / 750
+					docEl.style.fontSize = 100 * (clientWidth / 403) + 'px';
+				}
+			};
+			if(!doc.addEventListener) {
+				return;
+			} //addEventListener 兼容判断
+
+			win.addEventListener(resizeEvt, recalc, false); // 屏幕大小以及旋转变化自适应
+			doc.addEventListener('DOMContentLoaded', recalc, false); // 页面初次打开自适应
+			recalc();
+		}
+		rem(document, window);
+		
+		var local=location.search.substr(9);
+		$.ajax({
+			type:"post",
+			url:"https://api.ymduo.com/item/index",
+			data:{
+				"gid": local
+			},
+			success:function(res){
+				console.log(res);var str='';
+				$.each(res.result.data.image, function(index,ele) {
+					str='<div class="swiper-slide">'
+							+'<img src="'+ele+'" />'
+						+'</div>'
+					
+					$(".swiper-wrapper").append(str);
+					
+				});
+		//轮播
+			var mySwiper = new Swiper ('.swiper-container', {
+			    direction: 'horizontal',
+			    loop: true,
+			    // 如果需要分页器
+			    pagination: '.swiper-pagination',
+			    autoplay:2500
+			})   
+			
+			var newstr='<p class="new_price">￥'+res.result.data.price+'</p>'
+						+'<p class="old_price">￥'+res.result.data.old_price+'</p>'
+						+'<p class="tip">该商品最高可享3期分期付款</p>'
+						+'<p class="title">'+res.result.data.goods_name+'</p>'
+						+'<p class="ant">'
+							+'<span>快递:0.00</span>'
+							+'<span>月销'+res.result.data.monthly+'</span>'
+							+'<span>江苏苏州</span>'
+						+'</p>'
+			
+			
+			$(".shop_info").html(newstr);
+			
+		}
+	});
+		
+	
+	</script>
+
+</html>
